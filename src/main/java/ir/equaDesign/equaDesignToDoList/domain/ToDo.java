@@ -1,14 +1,12 @@
 package ir.equaDesign.equaDesignToDoList.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Data
+@EqualsAndHashCode(exclude = {"user"})
 @AllArgsConstructor
 @NoArgsConstructor
 public class ToDo {
@@ -17,16 +15,20 @@ public class ToDo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "To_DO")
+    @Column(name = "Task")
     private String description;
 
-    @Column(name = "Status")
+    @Column
     private boolean isDone;
 
+    @ManyToOne
+    @JoinColumn(name = "User_ID")
+    private User user;
+
     @Builder
-    public ToDo(String description , boolean isDone) {
+    public ToDo(String description , boolean isDone, User user) {
         this.description = description;
         this.isDone = isDone;
+        this.user = user;
     }
-
 }

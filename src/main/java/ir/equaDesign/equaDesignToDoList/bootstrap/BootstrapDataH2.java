@@ -1,7 +1,9 @@
 package ir.equaDesign.equaDesignToDoList.bootstrap;
 
 import ir.equaDesign.equaDesignToDoList.domain.ToDo;
-import ir.equaDesign.equaDesignToDoList.repositories.ToDoRepository;
+import ir.equaDesign.equaDesignToDoList.domain.User;
+import ir.equaDesign.equaDesignToDoList.repositories.UserRepository;
+import ir.equaDesign.equaDesignToDoList.services.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -10,27 +12,42 @@ import org.springframework.stereotype.Component;
 @Component
 public class BootstrapDataH2 implements CommandLineRunner {
 
-    private final ToDoRepository toDoRepository;
+    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public BootstrapDataH2( ToDoRepository toDoRepository) {
-        this.toDoRepository = toDoRepository;
+    public BootstrapDataH2(UserRepository userRepository, UserService userService) {
+        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Override
     public void run(String... args) throws Exception {
 
-        if (toDoRepository.count() == 0)
-            loadToDoes();
+        loadToDoes();
 
-        System.out.println(toDoRepository.count());
+
+        System.out.println(userService.updateTask(1,1,"trying").getDescription());
     }
 
     private void loadToDoes() {
-        toDoRepository.save(ToDo.builder().description("TO Do 1").build());
-        toDoRepository.save(ToDo.builder().description("TO Do 2").build());
-        toDoRepository.save(ToDo.builder().description("TO Do 3").build());
-        toDoRepository.save(ToDo.builder().description("TO Do 4").build());
-        toDoRepository.save(ToDo.builder().description("TO Do 5").build());
+
+        userCreator("Ehsan",5);
+        userCreator("Negar",5);
+        userCreator("Arian",5);
 
     }
+
+    private void userCreator(String name, int tasksCount) {
+        var user = User.builder().name(name).build();
+        addtasks(user , tasksCount);
+        userRepository.save(user);
+    }
+
+    private void addtasks(User user, int bound) {
+        for (int i = 1; i <= bound ; i++) {
+            var task = ToDo.builder().user(user).description("task " + i).build();
+            user.getTasks().add(task);
+        }
+    }
+
 }
