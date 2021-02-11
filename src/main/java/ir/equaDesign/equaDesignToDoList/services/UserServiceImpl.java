@@ -6,6 +6,9 @@ import ir.equaDesign.equaDesignToDoList.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
@@ -48,7 +51,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void deleteUser(Integer id) {
         userRepository.deleteById(id);
     }
 
@@ -97,5 +100,28 @@ public class UserServiceImpl implements UserService {
                         .get()
         );
 
+    }
+
+    @Override
+    public ToDo createTask(Integer userId, ToDo toDo) {
+        var user = userRepository.findById(userId).get();
+        var returnValue = user.addToDo(toDo);
+
+        userRepository.save(user);
+
+        return returnValue;
+    }
+
+    @Override
+    public Set<ToDo> allTasks(Integer userId) {
+
+        var list = userRepository.findById(userId).get().getTasks();
+
+        return list;
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 }

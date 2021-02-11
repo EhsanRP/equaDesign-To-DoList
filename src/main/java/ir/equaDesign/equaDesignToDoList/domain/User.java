@@ -29,4 +29,9 @@ public class User {
     public User(String name) {
         this.name = name;
     }
+
+    public ToDo addToDo(ToDo toDo){
+        this.tasks.add(toDo);
+        return toDo;
+    }
 }

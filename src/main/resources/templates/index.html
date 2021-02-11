@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Owner</th>
+            </tr>
+        </thead>
+        <tbody th:if="${not #lists.isEmpty(tasks)}">
+            <tr th:each="task: ${tasks}">
+                <td th:text="${task.id}"> 123</td>
+                <td th:text="${task.description}"> task description</td>
+                <td th:text="${task.isDone()}"> task status</td>
+                <td th:text="${task.user.getName()}"> task owner name</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -8,7 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-@Profile({"default", "H2"})
+@Profile({"default", "h2"})
 @Component
 public class BootstrapDataH2 implements CommandLineRunner {
 
