@@ -1,6 +1,6 @@
 package ir.equaDesign.equaDesignToDoList.bootstrap;
 
-import ir.equaDesign.equaDesignToDoList.domain.ToDo;
+import ir.equaDesign.equaDesignToDoList.domain.Task;
 import ir.equaDesign.equaDesignToDoList.domain.User;
 import ir.equaDesign.equaDesignToDoList.repositories.UserRepository;
 import ir.equaDesign.equaDesignToDoList.services.UserService;
@@ -45,7 +45,7 @@ public class BootstrapDataH2 implements CommandLineRunner {
 
     private void addtasks(User user, int bound) {
         for (int i = 1; i <= bound ; i++) {
-            var task = ToDo.builder().user(user).description("task " + i).build();
+            var task = Task.builder().user(user).description("task " + i).build();
             user.getTasks().add(task);
         }
     }

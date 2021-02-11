@@ -12,6 +12,7 @@
                 <th>Description</th>
                 <th>Status</th>
                 <th>Owner</th>
+                <th>Delete</th>
             </tr>
         </thead>
         <tbody th:if="${not #lists.isEmpty(tasks)}">
@@ -20,8 +21,10 @@
                 <td th:text="${task.description}"> task description</td>
                 <td th:text="${task.isDone()}"> task status</td>
                 <td th:text="${task.user.getName()}"> task owner name</td>
+                <td><a href="#" th:href="@{'/tasks/' + ${task.user.id} + '/delete/' + ${task.getId()}}" >delete</a></td>
             </tr>
         </tbody>
     </table>
 </body>
 </html>
+

@@ -1,23 +1,25 @@
 package ir.equaDesign.equaDesignToDoList.services;
 
-import ir.equaDesign.equaDesignToDoList.domain.ToDo;
+import ir.equaDesign.equaDesignToDoList.domain.Task;
 import ir.equaDesign.equaDesignToDoList.domain.User;
+import ir.equaDesign.equaDesignToDoList.repositories.TaskRepository;
 import ir.equaDesign.equaDesignToDoList.repositories.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public User save(User user) {
@@ -35,17 +37,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ToDo markAsDone(Integer id, Integer userId) {
+    public Task markAsDone(Integer id, Integer userId) {
         var user = userRepository.findById(userId).get();
         user.getTasks().stream()
-                .filter(toDo -> toDo.getId().equals(id))
+                .filter(task -> task.getId().equals(id))
                 .findFirst()
                 .get()
                 .setDone(true);
         userRepository.save(user);
 
         return user.getTasks().stream()
-                .filter(toDo -> toDo.getId().equals(id))
+                .filter(task -> task.getId().equals(id))
                 .findFirst()
                 .get();
     }
@@ -56,10 +58,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ToDo updateTask(Integer userId, Integer taskId, String description) {
+    public Task updateTask(Integer userId, Integer taskId, String description) {
         var user = userRepository.findById(userId).get();
         user.getTasks().stream()
-                .filter(toDo -> toDo.getId().equals(taskId))
+                .filter(task -> task.getId().equals(taskId))
                 .findFirst()
                 .get()
                 .setDescription(description);
@@ -67,45 +69,54 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         return user.getTasks().stream()
-                .filter(toDo -> toDo.getId().equals(taskId))
+                .filter(task -> task.getId().equals(taskId))
                 .findFirst()
                 .get();
     }
 
     @Override
-    public ToDo markAsUnDone(Integer TaskId, Integer userId) {
+    public Task markAsUnDone(Integer TaskId, Integer userId) {
         var user = userRepository.findById(userId).get();
         user.getTasks().stream()
-                .filter(toDo -> toDo.getId().equals(TaskId))
+                .filter(task -> task.getId().equals(TaskId))
                 .findFirst()
                 .get()
                 .setDone(false);
         userRepository.save(user);
 
         return user.getTasks().stream()
-                .filter(toDo -> toDo.getId().equals(TaskId))
+                .filter(task -> task.getId().equals(TaskId))
                 .findFirst()
                 .get();
     }
 
     @Override
     public void deleteTask(Integer taskId, Integer userId) {
-        var user = userRepository.findById(userId).get();
+        Optional<User> userOptional = userRepository.findById(userId);
 
-        user.getTasks().remove(
-                user.getTasks()
-                        .stream()
-                        .filter(toDo -> toDo.getId().equals(taskId))
-                        .findFirst()
-                        .get()
-        );
+        if (userOptional.isPresent()){
+            User user = userOptional.get();
 
+            Optional<Task> taskOptional = user.getTasks().stream()
+                    .filter(task -> task.getId().equals(taskId))
+                    .findFirst();
+
+            if (taskOptional.isPresent()){
+                Task taskToDelete = taskOptional.get();
+                taskToDelete.setUser(null);
+                user.getTasks().remove(taskToDelete);
+                taskRepository.deleteById(taskId);
+                userRepository.save(user);
+            } else
+                log.debug("Ingredient ID " + taskId + " Not Found");
+        } else
+            log.debug("Recipe Id " + userId + " Not Found");
     }
 
     @Override
-    public ToDo createTask(Integer userId, ToDo toDo) {
+    public Task createTask(Integer userId, Task task) {
         var user = userRepository.findById(userId).get();
-        var returnValue = user.addToDo(toDo);
+        var returnValue = user.addTask(task);
 
         userRepository.save(user);
 
@@ -113,7 +124,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<ToDo> allTasks(Integer userId) {
+    public Set<Task> allTasks(Integer userId) {
 
         var list = userRepository.findById(userId).get().getTasks();
 

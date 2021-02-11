@@ -23,15 +23,15 @@ public class User {
 
     @Column(name = "Sets")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user",fetch = FetchType.EAGER)
-    private Set<ToDo> tasks = new HashSet<>();
+    private Set<Task> tasks = new HashSet<>();
 
     @Builder
     public User(String name) {
         this.name = name;
     }
 
-    public ToDo addToDo(ToDo toDo){
-        this.tasks.add(toDo);
-        return toDo;
+    public Task addTask(Task task){
+        this.tasks.add(task);
+        return task;
     }
 }

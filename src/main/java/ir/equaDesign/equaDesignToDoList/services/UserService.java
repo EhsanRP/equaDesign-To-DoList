@@ -1,6 +1,6 @@
 package ir.equaDesign.equaDesignToDoList.services;
 
-import ir.equaDesign.equaDesignToDoList.domain.ToDo;
+import ir.equaDesign.equaDesignToDoList.domain.Task;
 import ir.equaDesign.equaDesignToDoList.domain.User;
 
 import java.util.List;
@@ -14,17 +14,17 @@ public interface UserService {
 
     User findById(Integer id);
 
-    Set<ToDo> allTasks(Integer userId);
+    Set<Task> allTasks(Integer userId);
 
     List<User> findAll();
 
-    ToDo createTask(Integer userId, ToDo toDo);
+    Task createTask(Integer userId, Task task);
 
-    ToDo updateTask(Integer userId, Integer taskId, String description);
+    Task updateTask(Integer userId, Integer taskId, String description);
 
-    ToDo markAsDone(Integer TaskId, Integer userId);
+    Task markAsDone(Integer TaskId, Integer userId);
 
-    ToDo markAsUnDone(Integer TaskId, Integer userId);
+    Task markAsUnDone(Integer TaskId, Integer userId);
 
     void deleteUser(Integer id);
 

@@ -9,7 +9,7 @@ import javax.persistence.*;
 @EqualsAndHashCode(exclude = {"user"})
 @AllArgsConstructor
 @NoArgsConstructor
-public class ToDo {
+public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class ToDo {
     private User user;
 
     @Builder
-    public ToDo(String description , boolean isDone, User user) {
+    public Task(String description , boolean isDone, User user) {
         this.description = description;
         this.isDone = isDone;
         this.user = user;
